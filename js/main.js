@@ -29,8 +29,6 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         innerData = [...data];
 
-        console.log(innerData);
-
         //Filtramos los datos de España por defecto y la opción de 'ambas nacionalidades'
         let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional' && item.nacionalidad == 'ambas'){ return item;}});
         currentData = [...nacData.reverse()];
