@@ -20,7 +20,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             return {
                 anio: d.anio,
                 ccaa: d.ccaa_2,
-                ccaa_searchable: d.ccaa_2.replace(/\s/g, '-').replace(/[\(\)]/g, '').toLowerCase(),
+                ccaa_searchable: d.ccaa_2.replace(/\s/g, '-').replace(/[\(\)\,]/g, '').toLowerCase(),
                 nacionalidad: d.nacionalidad,
                 edad_media: +d.edad_media,
                 ind_fecundidad: +d.ind_fecundidad
@@ -28,6 +28,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
         });
 
         innerData = [...data];
+
+        console.log(innerData);
 
         //Filtramos los datos de España por defecto y la opción de 'ambas nacionalidades'
         let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional' && item.nacionalidad == 'ambas'){ return item;}});
@@ -184,6 +186,8 @@ function updateChart(ccaa, ccaa2, nac) {
     });
 
     currentData = ccaaData.reverse();
+
+    console.log(currentData, ccaa, ccaa2);
 
     ccaaFirstData = currentData.filter(function(item) {
         if (item.ccaa_searchable == ccaa) {
