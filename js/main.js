@@ -159,7 +159,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
                 <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
 
@@ -274,7 +274,7 @@ function animateChart() {
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
             <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
 
@@ -356,7 +356,7 @@ function animateChart() {
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
                 <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
 
@@ -438,7 +438,7 @@ function initSecondPath(data) {
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
             <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
 
