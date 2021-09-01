@@ -4,8 +4,8 @@ let tooltip = d3.select('#tooltip');
 let innerData = [], currentData = [], ccaaFirstData = [], ccaaSecondData = [],
     chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis;
 let line, path_1, length_1, path_2, length_2;
-let enr_color_1 = '#296565'; //Para círculo del año 2020 > Para resto de círculos (2013, 2015, 2017 y 2019, sólo contorno)
-let enr_color_2 = '#e46b4f'; //Para círculo del año 2011
+let enr_color_1 = '#296565'; //Para círculo del año 2020 > Para resto de círculos
+let enr_color_2 = '#e46b4f'; //Para círculo del año 1975/2002
 
 initChart();
 
@@ -34,7 +34,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
         currentData = [...nacData.reverse()];
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 22.5, bottom: 25, left: 22.5};
+        let margin = {top: 5, right: 22.5, bottom: 25, left: 25};
         let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
@@ -69,7 +69,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje Y
         y_c = d3.scaleLinear()
-            .domain([0.75,7])
+            .domain([0.75,3.75])
             .range([height,0])
             .nice();
     
@@ -156,7 +156,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+                <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
                 <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
@@ -185,8 +185,6 @@ function updateChart(ccaa, ccaa2, nac) {
 
     currentData = ccaaData.reverse();
 
-    console.log(currentData, ccaa, ccaa2);
-
     ccaaFirstData = currentData.filter(function(item) {
         if (item.ccaa_searchable == ccaa) {
             return item;
@@ -204,6 +202,22 @@ function updateChart(ccaa, ccaa2, nac) {
     }
 
     //Modificar línea y círculos > Puede que haya dos líneas
+    if(nac == 'extranjera' && (ccaa == 'melilla' || ccaa2 == 'melilla' || ccaa == 'ceuta' || ccaa2 == 'ceuta')) {
+
+        //Modificar el eje Y
+        y_c.domain([0.75,7]).nice();
+        chart.select(".y_c-axis")
+            .call(y_cAxis);
+
+    } else {
+
+        //Modificar el eje Y
+        y_c.domain([0.75,3.5]).nice();
+        chart.select(".y_c-axis")
+            .call(y_cAxis);
+
+    }
+
     animateChart();
 }
 
@@ -271,7 +285,7 @@ function animateChart() {
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+            <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
             <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
@@ -353,7 +367,7 @@ function animateChart() {
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+                <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
                 <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
@@ -435,7 +449,7 @@ function initSecondPath(data) {
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+            <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
             <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
