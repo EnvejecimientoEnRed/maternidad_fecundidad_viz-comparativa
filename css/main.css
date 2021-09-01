@@ -37,7 +37,7 @@ body {
 
 .chart {
     width: 100%;
-    height: 360px; /* La altura del gráfico puede cambiar */
+    height: 345px; /* La altura del gráfico puede cambiar */
     margin: 12px auto 12px auto;
 }
 

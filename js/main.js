@@ -48,7 +48,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje X
         x_c = d3.scaleLinear()
-            .domain([0.5,7])
+            .domain([26,34])
             .range([0, width])
             .nice();
 
@@ -69,7 +69,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje Y
         y_c = d3.scaleLinear()
-            .domain([26,34])
+            .domain([0.75,7])
             .range([height,0])
             .nice();
     
@@ -94,8 +94,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Línea
         line = d3.line()
-            .x(function(d) { return x_c(d.ind_fecundidad); })
-            .y(function(d) { return y_c(d.edad_media); })
+            .x(function(d) { return x_c(d.edad_media); })
+            .y(function(d) { return y_c(d.ind_fecundidad); })
             .curve(d3.curveMonotoneX);
 
         path_1 = chart.append("path")
@@ -127,8 +127,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                     return '2.5';
                 }
             })
-            .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
-            .attr("cy", function(d) { return y_c(d.edad_media); })
+            .attr("cx", function(d) { return x_c(d.edad_media); })
+            .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
                     return `${enr_color_2}`;
@@ -242,8 +242,8 @@ function animateChart() {
                 return '2.5';
             }
         })
-        .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
-        .attr("cy", function(d) { return y_c(d.edad_media); })
+        .attr("cx", function(d) { return x_c(d.edad_media); })
+        .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) {
             if(i == 0) {
                 return `${enr_color_2}`;
@@ -324,8 +324,8 @@ function animateChart() {
                     return '2.5';
                 }
             })
-            .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
-            .attr("cy", function(d) { return y_c(d.edad_media); })
+            .attr("cx", function(d) { return x_c(d.edad_media); })
+            .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
                     return `${enr_color_2}`;
@@ -406,8 +406,8 @@ function initSecondPath(data) {
                 return '2.5';
             }
         })
-        .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
-        .attr("cy", function(d) { return y_c(d.edad_media); })
+        .attr("cx", function(d) { return x_c(d.edad_media); })
+        .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) { 
             if(i == 0) {
                 return `${enr_color_2}`;
