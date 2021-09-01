@@ -1,4 +1,4 @@
-let dataSource = 'https://raw.githubusercontent.com/EnvejecimientoEnRed/evolucion_residencias_data/main/data/evolucion_residencias_tamano_final_2.csv';
+let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/viz_maternidad_fecundidad/main/data/data_nac_fec.csv';
 let tooltip = d3.select('#tooltip');
 //Variables para visualización
 let innerData = [], currentData = [], ccaaFirstData = [], ccaaSecondData = [],
@@ -10,27 +10,31 @@ let enr_color_2 = '#e46b4f'; //Para círculo del año 2011
 initChart();
 
 function initChart() { //Carga de datos y muestra por defecto de España sin comparativa
-    d3.csv(dataSource, function(d) {
-        return {
-            anio: d.anio,
-            ccaa: d.ccaa,
-            ccaa_searchable: d.ccaa.replace(/\s/g, '-').replace(/[\(\)]/g, '').toLowerCase(),
-            centros: +d.centros,
-            plazas: +d.plazas,
-            poblacion: +d.poblacion,
-            ratio_centros: +d.ratio_centro,
-            ratio_poblacion: +d.ratio_pobl
-        }
-    }, function (error, data) {
+    d3.text(dataSource, function (error, d) {
         if (error) throw error;
+
+        let dsv = d3.dsvFormat(';');
+        let data = dsv.parse(d);
+
+        data = data.map(function(d){
+            return {
+                anio: d.anio,
+                ccaa: d.ccaa_2,
+                ccaa_searchable: d.ccaa_2.replace(/\s/g, '-').replace(/[\(\)]/g, '').toLowerCase(),
+                nacionalidad: d.nacionalidad,
+                edad_media: +d.edad_media,
+                ind_fecundidad: +d.ind_fecundidad
+            }           
+        });
+
         innerData = [...data];
 
-        //Filtramos los datos de España por defecto
-        let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional'){ return item;}});
-        currentData = [...nacData];
+        //Filtramos los datos de España por defecto y la opción de 'ambas nacionalidades'
+        let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional' && item.nacionalidad == 'ambas'){ return item;}});
+        currentData = [...nacData.reverse()];
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 22.5, bottom: 25, left: 30};
+        let margin = {top: 5, right: 22.5, bottom: 25, left: 22.5};
         let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
@@ -44,12 +48,12 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje X
         x_c = d3.scaleLinear()
-            .domain([d3.min(currentData.map((item) => Math.floor(item.ratio_poblacion) - 1)), d3.max(currentData.map((item) => Math.ceil(item.ratio_poblacion) + 1))])
+            .domain([0.5,7])
             .range([0, width])
             .nice();
 
         x_cAxis = function(g){
-            g.call(d3.axisBottom(x_c).ticks(4).tickFormat(function(d) { return numberWithCommas2(d); }))
+            g.call(d3.axisBottom(x_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d); }))
             g.call(function(g){
                 g.selectAll('.tick line')
                     .attr('y1', '0%')
@@ -65,7 +69,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje Y
         y_c = d3.scaleLinear()
-            .domain([d3.min(currentData.map((item) => Math.floor(item.ratio_centros) - 2.5)), d3.max(currentData.map((item) => Math.ceil(item.ratio_centros) + 2.5))])
+            .domain([26,34])
             .range([height,0])
             .nice();
     
@@ -90,8 +94,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Línea
         line = d3.line()
-            .x(function(d) { return x_c(d.ratio_poblacion); })
-            .y(function(d) { return y_c(d.ratio_centros); })
+            .x(function(d) { return x_c(d.ind_fecundidad); })
+            .y(function(d) { return y_c(d.edad_media); })
             .curve(d3.curveMonotoneX);
 
         path_1 = chart.append("path")
@@ -109,16 +113,22 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .transition()
             .ease(d3.easeLinear)
             .attr("stroke-dashoffset", 0)
-            .duration(2500);
+            .duration(3000);
 
         chart.selectAll('circles')
             .data(currentData)
             .enter()
             .append('circle')
             .attr('class', `circle-chart_2_1`)
-            .attr("r", 4.5)
-            .attr("cx", function(d) { return x_c(d.ratio_poblacion); })
-            .attr("cy", function(d) { return y_c(d.ratio_centros); })
+            .attr("r", function(d,i){
+                if(i == 0 || i == currentData.length -1) {
+                    return '5'
+                } else {
+                    return '2.5';
+                }
+            })
+            .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
+            .attr("cy", function(d) { return y_c(d.edad_media); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
                     return `${enr_color_2}`;
@@ -139,15 +149,15 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                 if(i == 0 || i == currentData.length -1) {
                     return '0'
                 } else {
-                    return `1`;
+                    return `0.5`;
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Ratio plazas/centro: ${numberWithCommas(d.ratio_centros.toFixed(2))} plazas por centro</p>
-                <p class="chart__tooltip--text">Ratio plazas/poblacion: ${numberWithCommas(d.ratio_poblacion.toFixed(2))} por cada 100 mayores</p>`;
+                <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+                <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
 
@@ -160,20 +170,20 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                 getOutTooltip(tooltip);                
             })
             .transition()
-            .delay(function(d,i){ return (2500 / 6) * (i + 0.5); })
+            .delay(function(d,i) { return i * (3000 / currentData.length - 1)})
             .style('opacity', '1');
     });
 }
 
 function updateChart(ccaa, ccaa2, nac) {
-    //Filtrar los datos para quedarse únicamente con los que nos interesan
+    //Filtrar los datos para quedarse únicamente con los que nos interesan > CCAA Y NACIONALIDAD
     let ccaaData = innerData.filter(function(item) {
-        if (item.ccaa_searchable == ccaa || item.ccaa_searchable == ccaa2) {
+        if ((item.ccaa_searchable == ccaa || item.ccaa_searchable == ccaa2) && (item.nacionalidad == nac) && (item.edad_media != 0)) {
             return item;
         }
     });
 
-    currentData = ccaaData;
+    currentData = ccaaData.reverse();
 
     ccaaFirstData = currentData.filter(function(item) {
         if (item.ccaa_searchable == ccaa) {
@@ -189,48 +199,7 @@ function updateChart(ccaa, ccaa2, nac) {
         });
     } else {
         ccaaSecondData = [];
-    }    
-
-    //Aquí nos quedaríamos con una u otra columna
-
-
-    if(nac == 'ambas') {
-
-        //Modificar el eje Y
-        y_c.domain([d3.min(currentData.map((item) => Math.floor(item.ratio_centros) - 1)), d3.max(currentData.map((item) => Math.ceil(item.ratio_centros) + 1))]).nice();
-        chart.select(".y_c-axis")
-            .call(y_cAxis);
-
-        //Modificar el eje X
-        x_c.domain([d3.min(currentData.map((item) => Math.floor(item.ratio_poblacion) - 2.5)), d3.max(currentData.map((item) => Math.ceil(item.ratio_poblacion) + 2.5))]).nice();
-        chart.select(".x_c-axis")
-            .call(x_cAxis);
-
-    } else if (nac == 'espanola') {
-
-        //Modificar el eje Y
-        y_c.domain([48,165]).nice();
-        chart.select(".y_c-axis")
-            .call(y_cAxis);
-
-        //Modificar el eje X
-        x_c.domain([1,8]).nice();
-        chart.select(".x_c-axis")
-            .call(x_cAxis);
-
-    } else {
-
-        //Modificar el eje Y
-        y_c.domain([48,165]).nice();
-        chart.select(".y_c-axis")
-            .call(y_cAxis);
-
-        //Modificar el eje X
-        x_c.domain([1,8]).nice();
-        chart.select(".x_c-axis")
-            .call(x_cAxis);
-
-    }   
+    }
 
     //Modificar línea y círculos > Puede que haya dos líneas
     animateChart();
@@ -253,14 +222,27 @@ function animateChart() {
         .transition()
         .ease(d3.easeLinear)
         .attr("stroke-dashoffset", 0)
-        .duration(2500);
+        .duration(3000);
 
-    chart.selectAll('.circle-chart_2_1')
+    chart
+        .selectAll('.circle-chart_2_1')
+        .remove();
+
+    chart.selectAll('circles')
         .data(ccaaFirstData)
-        .attr("r", 4.5)
-        .attr("cx", function(d) { return x_c(d.ratio_poblacion); })
-        .attr("cy", function(d) { return y_c(d.ratio_centros); })
-        .style("fill", function(d,i) { 
+        .enter()
+        .append('circle')
+        .attr('class', `circle-chart_2_1`)  
+        .attr("r", function(d,i){
+            if(i == 0 || i == ccaaFirstData.length -1) {
+                return '5'
+            } else {
+                return '2.5';
+            }
+        })
+        .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
+        .attr("cy", function(d) { return y_c(d.edad_media); })
+        .style("fill", function(d,i) {
             if(i == 0) {
                 return `${enr_color_2}`;
             } else if (i == ccaaFirstData.length - 1) {
@@ -280,15 +262,15 @@ function animateChart() {
             if(i == 0 || i == ccaaFirstData.length -1) {
                 return '0'
             } else {
-                return `1`;
+                return `0.5`;
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Ratio plazas/centro: ${numberWithCommas(d.ratio_centros.toFixed(2))} plazas por centro</p>
-            <p class="chart__tooltip--text">Ratio plazas/poblacion: ${numberWithCommas(d.ratio_poblacion.toFixed(2))} por cada 100 mayores</p>`;
+            <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+            <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
 
@@ -301,9 +283,8 @@ function animateChart() {
             getOutTooltip(tooltip);                
         })
         .transition()
-        .delay(function(d,i){ return (2500 / 6) * (i + 0.5); })
+        .delay(function(d,i) { return i * (3000 / ccaaFirstData.length )})
         .style('opacity', '1');
-
     
     if(!path_2) {
         initSecondPath(ccaaSecondData);
@@ -323,7 +304,7 @@ function animateChart() {
             .transition()
             .ease(d3.easeLinear)
             .attr("stroke-dashoffset", 0)
-            .duration(2500);
+            .duration(3000);
 
         chart
             .selectAll('.circle-chart_2_2')
@@ -334,9 +315,15 @@ function animateChart() {
             .enter()
             .append('circle')
             .attr('class', `circle-chart_2_2`)        
-            .attr("r", 4.5)
-            .attr("cx", function(d) { return x_c(d.ratio_poblacion); })
-            .attr("cy", function(d) { return y_c(d.ratio_centros); })
+            .attr("r", function(d,i){
+                if(i == 0 || i == ccaaSecondData.length -1) {
+                    return '5'
+                } else {
+                    return '2.5';
+                }
+            })
+            .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
+            .attr("cy", function(d) { return y_c(d.edad_media); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
                     return `${enr_color_2}`;
@@ -357,15 +344,15 @@ function animateChart() {
                 if(i == 0 || i == ccaaSecondData.length - 1) {
                     return '0'
                 } else {
-                    return `1`;
+                    return `0.5`;
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Ratio plazas/centro: ${numberWithCommas(d.ratio_centros.toFixed(2))} plazas por centro</p>
-                <p class="chart__tooltip--text">Ratio plazas/poblacion: ${numberWithCommas(d.ratio_poblacion.toFixed(2))} por cada 100 mayores</p>`;
+                <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+                <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
                 tooltip.html(html);
 
@@ -378,13 +365,13 @@ function animateChart() {
                 getOutTooltip(tooltip);                
             })
             .transition()
-            .delay(function(d,i){ return (2500 / 6) * (i + 0.5); })
+            .delay(function(d,i) { return i * (3000 / ccaaSecondData.length )})
             .style('opacity', '1');
     }   
 }
 
 document.getElementById('replay').addEventListener('click', function() {
-    animateChart();
+    updateChart(currentSelected, currentSelected_2, currentSelectedNac);
 });
 
 function initSecondPath(data) {
@@ -403,16 +390,22 @@ function initSecondPath(data) {
         .transition()
         .ease(d3.easeLinear)
         .attr("stroke-dashoffset", 0)
-        .duration(2500);
+        .duration(3000);
 
     chart.selectAll('circles')
         .data(data)
         .enter()
         .append('circle')
         .attr('class', `circle-chart_2_2`)
-        .attr("r", 4.5)
-        .attr("cx", function(d) { return x_c(d.ratio_poblacion); })
-        .attr("cy", function(d) { return y_c(d.ratio_centros); })
+        .attr("r", function(d,i){
+            if(i == 0 || i == data.length -1) {
+                return '5'
+            } else {
+                return '2.5';
+            }
+        })
+        .attr("cx", function(d) { return x_c(d.ind_fecundidad); })
+        .attr("cy", function(d) { return y_c(d.edad_media); })
         .style("fill", function(d,i) { 
             if(i == 0) {
                 return `${enr_color_2}`;
@@ -433,15 +426,15 @@ function initSecondPath(data) {
             if(i == 0 || i == data.length -1) {
                 return '0'
             } else {
-                return `1`;
+                return `0.5`;
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Ratio plazas/centro: ${numberWithCommas(d.ratio_centros.toFixed(2))} plazas por centro</p>
-            <p class="chart__tooltip--text">Ratio plazas/poblacion: ${numberWithCommas(d.ratio_poblacion.toFixed(2))} por cada 100 mayores</p>`;
+            <p class="chart__tooltip--text">Edad media a la maternidad: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
+            <p class="chart__tooltip--text">Índice de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
 
             tooltip.html(html);
 
@@ -454,7 +447,7 @@ function initSecondPath(data) {
             getOutTooltip(tooltip);                
         })
         .transition()
-        .delay(function(d,i){ return (2500 / 6) * (i + 0.5); })
+        .delay(function(d,i) { return i * (3000 / data.length )})
         .style('opacity', '1');
 }
 
