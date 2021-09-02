@@ -28,6 +28,10 @@ function setLanguage(lang) {
 function setLangElems(lang) {
     //Elementos superiores o inferiores al gráfico
     document.getElementById('chartTitle').textContent = lang.chartTitle;
+    document.getElementById('chartSubtitle').textContent = lang.chartSubtitle;
+    document.getElementById('chartSubtSpecial').textContent = lang.chartSubtSpecial;
+    document.getElementById('chartAxisY').textContent = lang.axisY;
+    document.getElementById('chartAxisX').textContent = lang.axisX;
 }
 
 //Gráficos
