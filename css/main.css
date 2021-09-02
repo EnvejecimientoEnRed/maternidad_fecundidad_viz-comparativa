@@ -96,6 +96,11 @@ body {
 - TOOLTIP
 */
 
+.link {
+    color: #41C0B4;
+    text-decoration: none;
+}
+
 /* LEYENDA */
 .chart__legend {
     /* Disposición de elementos */
