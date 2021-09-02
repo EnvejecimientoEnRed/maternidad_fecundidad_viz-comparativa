@@ -1,6 +1,6 @@
 # Visualización comparativa entre la edad media a la maternidad en el primer hijo y el indicador coyuntural de fecundidad
 
-La **visualización** la puede encontrar [aquí](https://carlosmunozdiazcsic.github.io/viz_maternidad_fecundidad/) en su versión española y (aquí)[] en su versión inglesa.
+La **visualización** la puede encontrar [aquí](https://carlosmunozdiazcsic.github.io/viz_maternidad_fecundidad/) en su versión española y [aquí](https://carlosmunozdiazcsic.github.io/viz_maternidad_fecundidad/?lang=en) en su versión inglesa.
 
 Los **datos** utilizados en esta visualización se han recopilado del INE y han sido procesados por el Laboratorio de Estadísticas Experimentales del CSIC, dando lugar a un archivo CSV que pueden encontrar [aquí](https://github.com/CarlosMunozDiazCSIC/viz_maternidad_fecundidad/blob/main/data/data_nac_fec_2.csv).
 
