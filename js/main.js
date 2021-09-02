@@ -7,9 +7,31 @@ let line, path_1, length_1, path_2, length_2;
 let enr_color_1 = '#296565'; //Para círculo del año 2020 > Para resto de círculos (2013, 2015, 2017 y 2019, sólo contorno)
 let enr_color_2 = '#e46b4f'; //Para círculo del año 2011
 
+//Desarrollo inicial
+let query = window.location.search;
+let urlParam = new URLSearchParams(query);
+let langParam = urlParam.get('lang');
+
+let lang = setLanguage(langParam);
+setLangElems(lang);
 initChart();
 
-function initChart() { //Carga de datos y muestra por defecto de España sin comparativa
+//Lenguage
+function setLanguage(lang) {
+    if(lang == 'en') {
+        return multilanguage.en;
+    } else {
+        return multilanguage.es;
+    }
+}
+
+function setLangElems(lang) {
+    //Elementos superiores o inferiores al gráfico
+    document.getElementById('chartTitle').textContent = lang.chartTitle;
+}
+
+//Gráficos
+function initChart() {
     d3.text(dataSource, function (error, d) {
         if (error) throw error;
 
@@ -53,7 +75,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .nice();
 
         x_cAxis = function(g){
-            g.call(d3.axisBottom(x_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d); }))
+            g.call(d3.axisBottom(x_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d, lang); }))
             g.call(function(g){
                 g.selectAll('.tick line')
                     .attr('y1', '0%')
@@ -74,7 +96,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .nice();
     
         y_cAxis = function(svg){
-            svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d); }))
+            svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d, lang); }))
             svg.call(function(g){
                 g.selectAll('.tick line')
                     .attr('class', function(d,i) {
@@ -156,8 +178,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad al nacer el primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
+                <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
 
                 tooltip.html(html);
 
@@ -280,8 +302,8 @@ function animateChart() {
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad al nacer el primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
+            <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
 
             tooltip.html(html);
 
@@ -362,8 +384,8 @@ function animateChart() {
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
                 let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad al nacer el primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
+                <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
 
                 tooltip.html(html);
 
@@ -444,8 +466,8 @@ function initSecondPath(data) {
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
             let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad al nacer el primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
+            <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
 
             tooltip.html(html);
 
@@ -463,10 +485,18 @@ function initSecondPath(data) {
 }
 
 //Helpers
-function numberWithCommas(x) {
-    return x.toString().replace(/\./g, ',');
+function numberWithCommas(x, lang) {
+    if(lang == 'es') {
+        return x.toString().replace(/\./g, ',');
+    } else {
+        return x;
+    }    
 }
 
-function numberWithCommas2(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function numberWithCommas2(x, lang) {
+    if(lang == 'es') {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    } else {
+        return x;
+    }    
 }

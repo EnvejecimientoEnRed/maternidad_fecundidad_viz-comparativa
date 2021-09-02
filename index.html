@@ -11,9 +11,9 @@
 </head>
 <body>
     <div class="b-chart">
-        <h1 class="chart__title">Comparativa entre la edad media a la maternidad al nacimiento del primer hijo y el indicador coyuntural de fecundidad</h1>
-        <h2 class="chart__subtitle">Datos entre 1975 y 2020*. Nivel nacional y autonómico</h2>
-        <h2 class="chart__subtitle special">Puede comparar dos comunidades autonómicas. También puede seleccionar la nacionalidad</h2>
+        <h1 class="chart__title" id="chartTitle">Comparativa entre la edad media a la maternidad al nacimiento del primer hijo y el indicador coyuntural de fecundidad</h1>
+        <h2 class="chart__subtitle" id="chartSubtitle">Datos entre 1975 y 2020*. Nivel nacional y autonómico</h2>
+        <h2 class="chart__subtitle special" id="chartSubtSpecial">Puede comparar dos comunidades autónomas. También puede seleccionar la nacionalidad</h2>
         <div class="chart__logics">
             <div class="b-custom-select">
                 <div class="custom-select" style="width:156px;">
@@ -79,25 +79,25 @@
                </div>
             </div>
             <div class="custom-replay" id="replay">
-                <span>Animar gráfico</span>
+                <span id="chartAnimate">Animar gráfico</span>
                 <img src="./css/replay.png" width="24px" height="24px">
             </div>
         </div>
         <!-- Leyenda -->
         <div class="chart__legend">
-            <span class="chart__legend--item two-colors-first">1975 o 2002*</span>
-            <span class="chart__legend--item two-colors-second">2020</span>
+            <span class="chart__legend--item two-colors-first" id="chartLegendFirst">1975 o 2002*</span>
+            <span class="chart__legend--item two-colors-second" id="chartLegendSecond">2020</span>
         </div>
         <!-- Visualización -->
         <div class="chart--special-axis axis-y">
-            <span>Indicador coyuntural de fecundidad</span>
+            <span id="chartAxisY">Indicador coyuntural de fecundidad</span>
         </div>
         <div class="chart" id="chart"></div>
         <div class="chart--special-axis axis-x">
-            <span>Edad media a la maternidad al nacimiento del primer hijo</span>
+            <span id="chartAxisX">Edad media a la maternidad al nacimiento del primer hijo</span>
         </div>
         <h3 class="chart__source"><span class="strong">Fuente:</span> INE y Departamento de Población, CSIC</h3>
-        <p class="chart__note">* Para 'ambas nacionalidades' hay datos entre 1975 y 2020. Para 'española' o 'extranjera' sólo existen datos entre 2002 y 2020.</p>
+        <p class="chart__note" id="chartNote">* Para 'ambas nacionalidades' hay datos entre 1975 y 2020. Para 'española' o 'extranjera' sólo existen datos entre 2002 y 2020.</p>
     </div>
     <div class="b-share">
         <!-- Aquí incluiremos bloque para compartir datos, poder embeber el gráfico, etc. -->
@@ -107,9 +107,10 @@
         <p class="chart__tooltip--text"></p>
     </div>
     <!-- Librerías JS -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>    
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./js/multilanguage.js"></script>   
     <script src="./js/tooltip.js"></script>
-    <script src="./js/main.js?v=01"></script>
+    <script src="./js/main.js"></script>
     <script src="./js/select.js"></script>
     <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
     <script>
