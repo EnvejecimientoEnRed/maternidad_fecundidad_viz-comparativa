@@ -53,11 +53,11 @@ function initChart() {
             }           
         });
 
-        innerData = [...data];
+        innerData = data.slice();
 
         //Filtramos los datos de España por defecto y la opción de 'ambas nacionalidades'
         let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional' && item.nacionalidad == 'ambas'){ return item;}});
-        currentData = [...nacData.reverse()];
+        currentData = nacData.slice().reverse();
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
         let margin = {top: 5, right: 22.5, bottom: 25, left: 22.5};
@@ -83,7 +83,7 @@ function initChart() {
             g.call(function(g){
                 g.selectAll('.tick line')
                     .attr('y1', '0%')
-                    .attr('y2', `-${height}`)
+                    .attr('y2', '-' + height + '')
             })
             g.call(function(g){g.select('.domain').remove()});
         }
@@ -108,8 +108,8 @@ function initChart() {
                             return 'line-special';
                         }
                     })
-                    .attr("x1", `0`)
-                    .attr("x2", `${width}`)
+                    .attr("x1", '0')
+                    .attr("x2", '' + width + '')
             })
             svg.call(function(g){g.select('.domain').remove()})
         }        
@@ -126,9 +126,9 @@ function initChart() {
 
         path_1 = chart.append("path")
             .data([currentData])
-            .attr("class", `line-chart_1`)
+            .attr("class", 'line-chart_1')
             .attr("fill", "none")
-            .attr("stroke", `${enr_color_1}`)
+            .attr("stroke", '' + enr_color_1 + '')
             .attr("stroke-width", '1.5px')
             .attr("d", line);
 
@@ -145,7 +145,7 @@ function initChart() {
             .data(currentData)
             .enter()
             .append('circle')
-            .attr('class', `circle-chart_2_1`)
+            .attr('class', 'circle-chart_2_1')
             .attr("r", function(d,i){
                 if(i == 0 || i == currentData.length -1) {
                     return '5'
@@ -157,9 +157,9 @@ function initChart() {
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 } else if (i == currentData.length - 1) {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 } else {
                     return '#fff';
                 }
@@ -168,22 +168,20 @@ function initChart() {
                 if(i == 0 || i == currentData.length -1) {
                     return 'none'
                 } else {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 }
             })
             .style("stroke-width", function(d,i) {
                 if(i == 0 || i == currentData.length -1) {
                     return '0'
                 } else {
-                    return `0.5`;
+                    return '0.5';
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
-                <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
 
                 tooltip.html(html);
 
@@ -246,9 +244,9 @@ function animateChart() {
     //Opción de tener dos líneas
     path_1 = chart.select(".line-chart_1")
         .data([ccaaFirstData])
-        .attr("class", `line-chart_1`)
+        .attr("class", 'line-chart_1')
         .attr("fill", "none")
-        .attr("stroke", `${enr_color_1}`)
+        .attr("stroke", '' + enr_color_1 + '')
         .attr("stroke-width", '1.5px')
         .attr("d", line);
 
@@ -269,7 +267,7 @@ function animateChart() {
         .data(ccaaFirstData)
         .enter()
         .append('circle')
-        .attr('class', `circle-chart_2_1`)  
+        .attr('class', 'circle-chart_2_1')  
         .attr("r", function(d,i){
             if(i == 0 || i == ccaaFirstData.length -1) {
                 return '5'
@@ -281,9 +279,9 @@ function animateChart() {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) {
             if(i == 0) {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             } else if (i == ccaaFirstData.length - 1) {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             } else {
                 return '#fff';
             }
@@ -292,22 +290,20 @@ function animateChart() {
             if(i == 0 || i == ccaaFirstData.length -1) {
                 return 'none'
             } else {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             }
         })
         .style("stroke-width", function(d,i) {
-            if(i == 0 || i == ccaaFirstData.length -1) {
+            if(i == 0 || i == ccaaFirstData.length - 1) {
                 return '0'
             } else {
-                return `0.5`;
+                return '0.5';
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
-            <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
 
             tooltip.html(html);
 
@@ -328,9 +324,9 @@ function animateChart() {
     } else {
         path_2 = chart.select(".line-chart_2")
             .data([ccaaSecondData])
-            .attr("class", `line-chart_2`)
+            .attr("class", 'line-chart_2')
             .attr("fill", "none")
-            .attr("stroke", `${enr_color_2}`)
+            .attr("stroke", '' + enr_color_2 + '')
             .attr("stroke-width", '1.5px')
             .attr("d", line);
 
@@ -351,7 +347,7 @@ function animateChart() {
             .data(ccaaSecondData)
             .enter()
             .append('circle')
-            .attr('class', `circle-chart_2_2`)        
+            .attr('class', 'circle-chart_2_2')        
             .attr("r", function(d,i){
                 if(i == 0 || i == ccaaSecondData.length -1) {
                     return '5'
@@ -363,9 +359,9 @@ function animateChart() {
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 } else if (i == ccaaSecondData.length - 1) {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 } else {
                     return '#fff';
                 }
@@ -374,22 +370,20 @@ function animateChart() {
                 if(i == 0 || i == ccaaSecondData.length - 1) {
                     return 'none'
                 } else {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 }
             })
             .style("stroke-width", function(d,i) {
                 if(i == 0 || i == ccaaSecondData.length - 1) {
                     return '0'
                 } else {
-                    return `0.5`;
+                    return '0.5';
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
-                <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
 
                 tooltip.html(html);
 
@@ -414,9 +408,9 @@ document.getElementById('replay').addEventListener('click', function() {
 function initSecondPath(data) {
     path_2 = chart.append("path")
         .data([data])
-        .attr("class", `line-chart_2`)
+        .attr("class", 'line-chart_2')
         .attr("fill", "none")
-        .attr("stroke", `${enr_color_2}`)
+        .attr("stroke", '' + enr_color_2 + '')
         .attr("stroke-width", '1.5px')
         .attr("d", line);
 
@@ -433,9 +427,9 @@ function initSecondPath(data) {
         .data(data)
         .enter()
         .append('circle')
-        .attr('class', `circle-chart_2_2`)
+        .attr('class', 'circle-chart_2_2')
         .attr("r", function(d,i){
-            if(i == 0 || i == data.length -1) {
+            if(i == 0 || i == data.length - 1) {
                 return '5'
             } else {
                 return '2.5';
@@ -445,9 +439,9 @@ function initSecondPath(data) {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) { 
             if(i == 0) {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             } else if (i == data.length - 1) {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             } else {
                 return '#fff';
             }
@@ -456,22 +450,20 @@ function initSecondPath(data) {
             if(i == 0 || i == data.length -1) {
                 return 'none'
             } else {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             }
         })
         .style("stroke-width", function(d,i) {
             if(i == 0 || i == data.length -1) {
                 return '0'
             } else {
-                return `0.5`;
+                return '0.5';
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">${lang.tooltipMaternity}: ${numberWithCommas(d.edad_media.toFixed(1), lang)} ${lang.tooltipYears}</p>
-            <p class="chart__tooltip--text">${lang.tooltipFertility}: ${numberWithCommas(d.ind_fecundidad.toFixed(1), lang)}</p>`;
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
 
             tooltip.html(html);
 

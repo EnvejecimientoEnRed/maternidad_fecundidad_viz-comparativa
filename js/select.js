@@ -32,16 +32,16 @@ for (i = 0; i < l; i++) {
         let elemType = e.target.getAttribute('data-type');
         if(elemType == 'ccaa') {
           //Vamos a dejar en display: none la segunda columna y a quitar la que había previamente (y viceversa)
-          document.querySelectorAll(`[data-value='${currentSelected}']`)[1].style.display = 'block';
-          document.querySelectorAll(`[data-value='${e.target.getAttribute('data-value')}']`)[1].style.display = 'none';
+          document.querySelectorAll('[data-value=' + currentSelected + ']')[1].style.display = 'block';
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[1].style.display = 'none';
 
           currentSelected = e.target.getAttribute('data-value');          
         } else if (elemType == 'ccaa-2') {
           //Vamos a dejar en display: none la primera columna y a quitar la que había previamente (y viceversa)
           if(currentSelected_2 != ''){
-            document.querySelectorAll(`[data-value='${currentSelected_2}']`)[0].style.display = 'block';
+            document.querySelectorAll('[data-value=' + currentSelected_2 + ']')[0].style.display = 'block';
           }          
-          document.querySelectorAll(`[data-value='${e.target.getAttribute('data-value')}']`)[0].style.display = 'none';
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[0].style.display = 'none';
 
           currentSelected_2 = e.target.getAttribute('data-value');
         } else {
@@ -77,7 +77,7 @@ for (i = 0; i < l; i++) {
   });
 }
 
-document.querySelectorAll(`[data-value='nacional']`)[1].style.display = 'none';
+document.querySelectorAll('[data-value="nacional"]')[1].style.display = 'none';
 
 function closeAllSelect(elmnt) {
   /* A function that will close all select boxes in the document,
