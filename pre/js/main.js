@@ -180,6 +180,8 @@ function initChart() {
             .transition()
             .delay(function(d,i) { return i * (3000 / currentData.length - 1)})
             .style('opacity', '1');
+
+        setChartCanvas();
     });
 }
 
@@ -382,6 +384,8 @@ function animateChart() {
             .transition()
             .delay(function(d,i) { return i * (3000 / ccaaSecondData.length )})
             .style('opacity', '1');
+
+        setChartCanvas();
     }   
 }
 
@@ -483,10 +487,8 @@ setChartHeight();
 let innerCanvas;
 let pngDownload = document.getElementById('pngImage');
 
-setChartCanvas();
-
 function setChartCanvas() {
-    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas}, {width: '768px', height: '588px'});
+    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas }, {width: '768px', height: '588px'});
 }
 
 function setChartCanvasImage() {    
@@ -494,7 +496,7 @@ function setChartCanvasImage() {
     // Create a link
     var aDownloadLink = document.createElement('a');
     // Add the name of the file to the link
-    aDownloadLink.download = 'webpack-base-template.png';
+    aDownloadLink.download = 'viz-maternidad-fecundidad.png';
     // Attach the data to the link
     aDownloadLink.href = image;
     // Get the code to click the download link
