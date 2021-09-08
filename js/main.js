@@ -60,7 +60,7 @@ function initChart() {
         currentData = nacData.slice().reverse();
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 22.5, bottom: 25, left: 22.5};
+        let margin = {top: 5, right: 22.5, bottom: 25, left: 24.5};
         let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
