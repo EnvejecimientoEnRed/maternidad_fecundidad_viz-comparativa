@@ -177,6 +177,9 @@ body, button {
                 margin-top: 4px;
                 height: 32px;
                 .btn_animate {
+                    display: flex;
+                    align-items: center;
+
                     width: auto;
                     height: 100%;
                     padding: 0px 8px;
@@ -186,6 +189,10 @@ body, button {
                     cursor: pointer;
 
                     font-size: 0.9rem;
+
+                    img {
+                        margin-right: 3px;
+                    }
                 }
             }
         }
