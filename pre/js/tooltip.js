@@ -26,3 +26,9 @@ function positionTooltip(event, tooltip) {
     tooltip.style('top', y + 17 + 'px');
     tooltip.style('left', (x + horizontalPos) + 'px');
 }
+
+export {
+    getInTooltip,
+    getOutTooltip,
+    positionTooltip
+}

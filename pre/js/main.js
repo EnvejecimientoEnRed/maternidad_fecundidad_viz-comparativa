@@ -1,40 +1,24 @@
+import html2canvas from 'html2canvas';
+import { getInTooltip, getOutTooltip, positionTooltip } from './tooltip';
+import { numberWithCommas, numberWithCommas2 } from './helpers';
+import * as d3 from 'd3';
+
+//Necesario para importar los estilos de forma automática en la etiqueta 'style' del html final
+import '../css/main.scss';
+
+///// VISUALIZACIÓN DEL GRÁFICO //////
 let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/viz_maternidad_fecundidad/main/data/data_nac_fec_2.csv';
 let tooltip = d3.select('#tooltip');
+
 //Variables para visualización
 let innerData = [], currentData = [], ccaaFirstData = [], ccaaSecondData = [],
     chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis;
 let line, path_1, length_1, path_2, length_2;
-let enr_color_1 = '#296565'; //Para círculo del año 2020 > Para resto de círculos (2013, 2015, 2017 y 2019, sólo contorno)
-let enr_color_2 = '#e46b4f'; //Para círculo del año 2011
+let enr_color_1 = '#296565';
+let enr_color_2 = '#e46b4f';
 
-//Desarrollo inicial
-let query = window.location.search;
-let urlParam = new URLSearchParams(query);
-let langParam = urlParam.get('lang');
-
-let lang = setLanguage(langParam);
-setLangElems(lang);
 initChart();
 
-//Lenguage
-function setLanguage(lang) {
-    if(lang == 'en') {
-        return multilanguage.en;
-    } else {
-        return multilanguage.es;
-    }
-}
-
-function setLangElems(lang) {
-    //Elementos superiores o inferiores al gráfico
-    document.getElementById('chartTitle').textContent = lang.chartTitle;
-    document.getElementById('chartSubtitle').textContent = lang.chartSubtitle;
-    document.getElementById('chartSubtSpecial').textContent = lang.chartSubtSpecial;
-    document.getElementById('chartAxisY').textContent = lang.axisY;
-    document.getElementById('chartAxisX').textContent = lang.axisX;
-}
-
-//Gráficos
 function initChart() {
     d3.text(dataSource, function (error, d) {
         if (error) throw error;
@@ -79,7 +63,7 @@ function initChart() {
             .nice();
 
         x_cAxis = function(g){
-            g.call(d3.axisBottom(x_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d, lang); }))
+            g.call(d3.axisBottom(x_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d); }))
             g.call(function(g){
                 g.selectAll('.tick line')
                     .attr('y1', '0%')
@@ -100,7 +84,7 @@ function initChart() {
             .nice();
     
         y_cAxis = function(svg){
-            svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d, lang); }))
+            svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return numberWithCommas2(d); }))
             svg.call(function(g){
                 g.selectAll('.tick line')
                     .attr('class', function(d,i) {
@@ -181,7 +165,7 @@ function initChart() {
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -303,7 +287,7 @@ function animateChart() {
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
@@ -383,7 +367,7 @@ function animateChart() {
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -463,7 +447,7 @@ function initSecondPath(data) {
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1), lang) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1), lang) + '</p>';
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
@@ -480,19 +464,179 @@ function initSecondPath(data) {
         .style('opacity', '1');
 }
 
-//Helpers
-function numberWithCommas(x, lang) {
-    if(lang == 'es') {
-        return x.toString().replace(/\./g, ',');
-    } else {
-        return x;
-    }    
+///// ALTURA DEL BLOQUE DEL GRÁFICO //////
+function setChartHeight() {
+    let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight;
+    let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
+    let footerBlock = document.getElementsByClassName('chart__footer')[0].clientHeight;
+    let footerTop = 8, containerPadding = 8, marginTitle = 16, marginLogics = 16;
+
+    //Comprobar previamente la altura que le demos al MAIN. El estado base es 588 pero podemos hacerlo más o menos alto en función de nuestros intereses
+
+    let height = 612; //Altura total del main | Cambiar cuando sea necesario > Quitar aquí los ejes: 35 + 27 > 62
+    document.getElementsByClassName('chart__viz')[0].style.height = height - titleBlock - logicBlock - footerBlock - footerTop - containerPadding - marginTitle - marginLogics + 'px';
 }
 
-function numberWithCommas2(x, lang) {
-    if(lang == 'es') {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    } else {
-        return x;
-    }    
+setChartHeight();
+
+///// DESCARGA COMO PNG O SVG > DOS PASOS/////
+let innerCanvas;
+let pngDownload = document.getElementById('pngImage');
+
+setChartCanvas();
+
+function setChartCanvas() {
+    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas}, {width: '768px', height: '588px'});
 }
+
+function setChartCanvasImage() {    
+    var image = innerCanvas.toDataURL();
+    // Create a link
+    var aDownloadLink = document.createElement('a');
+    // Add the name of the file to the link
+    aDownloadLink.download = 'webpack-base-template.png';
+    // Attach the data to the link
+    aDownloadLink.href = image;
+    // Get the code to click the download link
+    aDownloadLink.click();
+}
+
+pngDownload.addEventListener('click', function(){
+    setChartCanvasImage();
+});
+
+///// JUEGO DE PESTAÑAS /////
+//Cambios de pestañas
+let tabs = document.getElementsByClassName('tab');
+let contenidos = document.getElementsByClassName('content');
+
+for(let i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function(e) {
+        displayContainer(e.target);
+    });
+}
+
+function displayContainer(elem) {
+    let content = elem.getAttribute('data-target');
+
+    //Poner activo el botón
+    for(let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    elem.classList.add('active');
+
+    //Activar el contenido
+    for(let i = 0; i < contenidos.length; i++) {
+        contenidos[i].classList.remove('active');
+    }
+
+    document.getElementsByClassName(content)[0].classList.add('active');
+}
+
+///// USO DE SELECTORES //////
+let x, i, j, l, ll, selElmnt, a, b, c;
+let currentSelected = 'nacional', currentSelected_2 = '', currentSelectedNac = 'ambas';
+/* Look for any elements with the class "custom-select": */
+x = document.getElementsByClassName("custom-select");
+l = x.length;
+for (i = 0; i < l; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  ll = selElmnt.length;
+  /* For each element, create a new DIV that will act as the selected item: */
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /* For each element, create a new DIV that will contain the option list: */
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < ll; j++) {
+    /* For each option in the original select element,
+    create a new DIV that will act as an option item: */
+    c = document.createElement("DIV");
+    let valores = selElmnt.options[j].value.split("_");
+    c.setAttribute('data-value', valores[0]);
+    c.setAttribute('data-type', valores[1]);
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /* When an item is clicked, update the original select box,
+        and the selected item: */
+        let y, i, k, s, h, sl, yl;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        sl = s.length;
+        h = this.parentNode.previousSibling;
+        let elemType = e.target.getAttribute('data-type');
+        if(elemType == 'ccaa') {
+          //Vamos a dejar en display: none la segunda columna y a quitar la que había previamente (y viceversa)
+          document.querySelectorAll('[data-value=' + currentSelected + ']')[1].style.display = 'block';
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[1].style.display = 'none';
+
+          currentSelected = e.target.getAttribute('data-value');          
+        } else if (elemType == 'ccaa-2') {
+          //Vamos a dejar en display: none la primera columna y a quitar la que había previamente (y viceversa)
+          if(currentSelected_2 != ''){
+            document.querySelectorAll('[data-value=' + currentSelected_2 + ']')[0].style.display = 'block';
+          }          
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[0].style.display = 'none';
+
+          currentSelected_2 = e.target.getAttribute('data-value');
+        } else {
+          currentSelectedNac = e.target.getAttribute('data-value');
+        }
+        updateChart(currentSelected, currentSelected_2, currentSelectedNac);
+
+        for (i = 0; i < sl; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            yl = y.length;
+            for (k = 0; k < yl; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+    /* When the select box is clicked, close any other select boxes,
+    and open/close the current select box: */
+    e.stopPropagation();
+    closeAllSelect(this);
+    this.nextSibling.classList.toggle("select-hide");
+    this.classList.toggle("select-arrow-active");
+  });
+}
+
+document.querySelectorAll('[data-value="nacional"]')[1].style.display = 'none';
+
+function closeAllSelect(elmnt) {
+  /* A function that will close all select boxes in the document,
+  except the current select box: */
+  let x, y, i, xl, yl, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  xl = x.length;
+  yl = y.length;
+  for (i = 0; i < yl; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < xl; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+
+/* If the user clicks anywhere outside the select box,
+then close all select boxes: */
+document.addEventListener("click", closeAllSelect);
