@@ -181,7 +181,9 @@ function initChart() {
             .delay(function(d,i) { return i * (3000 / currentData.length - 1)})
             .style('opacity', '1');
 
-        setChartCanvas();
+        setTimeout(() => {
+            setChartCanvas(); 
+        }, 4000);
     });
 }
 
@@ -383,10 +385,11 @@ function animateChart() {
             })
             .transition()
             .delay(function(d,i) { return i * (3000 / ccaaSecondData.length )})
-            .style('opacity', '1');
-
-        setChartCanvas();
-    }   
+            .style('opacity', '1');        
+    }
+    setTimeout(() => {
+        setChartCanvas(); 
+    }, 4000);
 }
 
 document.getElementById('replay').addEventListener('click', function() {
@@ -488,7 +491,7 @@ let innerCanvas;
 let pngDownload = document.getElementById('pngImage');
 
 function setChartCanvas() {
-    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas }, {width: '768px', height: '588px'});
+    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas; }, {width: '768px', height: '600px'});
 }
 
 function setChartCanvasImage() {    
