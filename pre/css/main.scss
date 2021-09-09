@@ -1,4 +1,4 @@
-@import './reset';
+@import './reset', './rrss';
 
 * {
     margin: 0;
@@ -17,8 +17,6 @@ body, button {
     max-width: 768px;
     height: 688px; //Puede cambiar
     margin: 0 auto;
-
-    position: relative;
 }
 
 //Cuerpo importante del desarrollo
@@ -287,12 +285,23 @@ body, button {
         &__footer {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
+            
 
             font-size: 0.85em;
 
             .chart__source {
                 margin-right: 16px;
+
+                &--note {
+                    font-style: 0.65em;
+                    font-style: italic;
+
+                    margin-top: 4px;
+                }
+            }
+
+            .chart__copyright {
+                flex-shrink: 0;
             }
 
             .chart__source, .chart__copyright {
@@ -345,7 +354,7 @@ body, button {
         font-size: 0.9em;
         font-weight: 400;
         text-decoration: underline;     
-        text-decoration-color: #4E7E7E; 
+        //text-decoration-color: #4E7E7E; 
         margin-bottom: 12px;
     }
     &__paragraph {
@@ -364,7 +373,7 @@ body, button {
 }
 
 .link {
-    border-bottom: 1px solid #4E7E7E;
+    border-bottom: 1.5px solid #4E7E7E;
     color: #000;
     text-decoration: none;
 }
@@ -378,6 +387,15 @@ body, button {
     cursor: pointer;
     
     font-size: 0.9rem;
+}
+
+.b-rrss {
+    width: 50%;
+    margin: 16px auto 0px auto;
+
+    display: flex;
+    justify-content: space-between;
+
 }
 
 //Pestañas inferiores
@@ -482,6 +500,10 @@ body, button {
             //max-width: calc(100% - 100px);
             width: 100%;
         }
+    }
+
+    .b-rrss {
+        width: 80%;
     }
 }
 

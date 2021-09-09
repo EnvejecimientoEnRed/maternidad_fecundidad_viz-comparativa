@@ -1,5 +1,6 @@
 import html2canvas from 'html2canvas';
 import { getInTooltip, getOutTooltip, positionTooltip } from './tooltip';
+import { setRRSSLinks } from './rrss';
 import { numberWithCommas, numberWithCommas2 } from './helpers';
 import * as d3 from 'd3';
 
@@ -470,6 +471,9 @@ function initSecondPath(data) {
         .delay(function(d,i) { return i * (3000 / data.length )})
         .style('opacity', '1');
 }
+
+///// REDES SOCIALES /////
+setRRSSLinks();
 
 ///// ALTURA DEL BLOQUE DEL GRÁFICO //////
 function setChartHeight() {
