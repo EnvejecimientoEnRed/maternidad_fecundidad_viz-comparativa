@@ -10,19 +10,22 @@ body, button {
 
     //Tamaño de elementos para utilizar EMs posteriormente
     font-size: 16px;
+    line-height: 1.25em;
 }
 
 .container {
     width: 100%;
     max-width: 768px;
-    height: 688px; //Puede cambiar
+    height: auto;
+    //height: 688px;
     margin: 0 auto;
 }
 
 //Cuerpo importante del desarrollo
 .main {
     width: 100%;
-    height: 656px;
+    height: auto;
+    //height: 656px;
 
     .content {
         position: relative;
@@ -245,7 +248,7 @@ body, button {
 
         //Visualización
         &__viz {
-            height: auto;
+            height: 420px;
 
             & .tick text {
                 font-family: 'Titillium Web';
@@ -283,28 +286,28 @@ body, button {
 
         //Pie
         &__footer {
-            display: flex;
-            justify-content: space-between;
-            
-
             font-size: 0.85em;
 
             .chart__source {
                 margin-right: 16px;
 
-                &--note {
-                    font-style: 0.65em;
-                    font-style: italic;
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
 
-                    margin-top: 4px;
+                &--data, &--copyright {
+                    margin-top: 8px;
+                }
+
+                &--data span {
+                    font-weight: 700;
                 }
             }
 
-            .chart__copyright {
-                flex-shrink: 0;
-            }
+            .chart__note {
+                font-style: 0.65em;
+                font-style: italic;
 
-            .chart__source, .chart__copyright {
                 margin-top: 8px;
             }
         }
@@ -373,7 +376,7 @@ body, button {
 }
 
 .link {
-    border-bottom: 1.5px solid #4E7E7E;
+    border-bottom: 2px solid #4E7E7E;
     color: #000;
     text-decoration: none;
 }
