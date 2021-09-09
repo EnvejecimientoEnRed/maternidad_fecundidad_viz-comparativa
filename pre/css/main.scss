@@ -283,36 +283,6 @@ body, button {
             }
         }
 
-        //Tooltip
-        &__tooltip {
-            position: absolute;
-            opacity: 0;   
-
-            width: auto;
-            max-width: 135px;
-            height: auto;
-            padding: 8px;
-            background-color: #F4F4F4;
-
-            &--title {
-                font-style: normal;
-                font-weight: 700;
-                font-size: 12px;
-                line-height: 1.1;
-                color: #000;
-            }
-
-            &--text {
-                font-style: normal;
-                font-weight: 300;
-                font-size: 12px;
-                line-height: 1.1;
-                color: #000;
-
-                margin-top: 4px;
-            }
-        }
-
         //Pie
         &__footer {
             display: flex;
@@ -453,6 +423,36 @@ body, button {
                 border-bottom: 2px solid #4E7E7E;
             }
         }        
+    }
+}
+
+//Tooltip
+.chart__tooltip {
+    position: absolute;
+    opacity: 0;   
+
+    width: auto;
+    max-width: 135px;
+    height: auto;
+    padding: 8px;
+    background-color: #F4F4F4;
+
+    &--title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.1;
+        color: #000;
+    }
+
+    &--text {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 1.1;
+        color: #000;
+
+        margin-top: 4px;
     }
 }
 
