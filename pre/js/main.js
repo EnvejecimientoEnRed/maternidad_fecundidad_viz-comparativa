@@ -476,7 +476,7 @@ function setChartHeight() {
     let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight;
     let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
     let footerBlock = document.getElementsByClassName('chart__footer')[0].clientHeight;
-    let footerTop = 8, containerPadding = 8, marginTitle = 16, marginLogics = 16;
+    let footerTop = 8, containerPadding = 8, marginTitle = 8, marginLogics = 16;
 
     //Comprobar previamente la altura que le demos al MAIN. El estado base es 588 pero podemos hacerlo más o menos alto en función de nuestros intereses
 
@@ -491,7 +491,7 @@ let innerCanvas;
 let pngDownload = document.getElementById('pngImage');
 
 function setChartCanvas() {
-    html2canvas(document.querySelector("#chartBlock")).then(canvas => { innerCanvas = canvas; }, {width: '768px', height: '600px'});
+    html2canvas(document.querySelector("#chartBlock"), {width: 768, height: 656, imageTimeout: 12000, useCORS: true}).then(canvas => { innerCanvas = canvas; });
 }
 
 function setChartCanvasImage() {    
