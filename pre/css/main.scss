@@ -468,6 +468,21 @@ body, button {
             }
         }
     }
+
+    .b-title {
+        width: 100%;
+        max-width: none;
+    
+        .title {
+            max-width: calc(100% - 100px);
+        }
+        
+        .subtitle {
+            //El ancho dependerá de la longitud del título > Para que no se pegue con el logo
+            //max-width: calc(100% - 100px);
+            width: 100%;
+        }
+    }
 }
 
 @media screen and (max-width: 475px) {
