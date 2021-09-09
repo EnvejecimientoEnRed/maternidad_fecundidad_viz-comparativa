@@ -165,7 +165,7 @@ function initChart() {
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -291,7 +291,7 @@ function animateChart() {
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
@@ -371,7 +371,7 @@ function animateChart() {
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -454,7 +454,7 @@ function initSecondPath(data) {
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">' + lang.tooltipMaternity + ':' + numberWithCommas(d.edad_media.toFixed(1)) + ' ' + lang.tooltipYears + '</p>' + '<p class="chart__tooltip--text">' + + lang.tooltipMaternity + ':' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + '(' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
