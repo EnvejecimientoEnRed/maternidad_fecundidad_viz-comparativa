@@ -1,15 +1,27 @@
-let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/viz_maternidad_fecundidad/main/data/data_nac_fec.csv';
+import html2canvas from 'html2canvas';
+import { getInTooltip, getOutTooltip, positionTooltip } from './tooltip';
+import { setRRSSLinks } from './rrss';
+import { numberWithCommas, numberWithCommas2 } from './helpers';
+import 'url-search-params-polyfill';
+import * as d3 from 'd3';
+
+//Necesario para importar los estilos de forma automática en la etiqueta 'style' del html final
+import '../css/main.scss';
+
+///// VISUALIZACIÓN DEL GRÁFICO //////
+let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/viz_maternidad_fecundidad/main/data/data_nac_fec_2.csv';
 let tooltip = d3.select('#tooltip');
+
 //Variables para visualización
 let innerData = [], currentData = [], ccaaFirstData = [], ccaaSecondData = [],
     chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis;
 let line, path_1, length_1, path_2, length_2;
-let enr_color_1 = '#296565'; //Para círculo del año 2020 > Para resto de círculos
-let enr_color_2 = '#e46b4f'; //Para círculo del año 1975/2002
+let enr_color_1 = '#296565';
+let enr_color_2 = '#e46b4f';
 
 initChart();
 
-function initChart() { //Carga de datos y muestra por defecto de España sin comparativa
+function initChart() {
     d3.text(dataSource, function (error, d) {
         if (error) throw error;
 
@@ -22,19 +34,19 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                 ccaa: d.ccaa_2,
                 ccaa_searchable: d.ccaa_2.replace(/\s/g, '-').replace(/[\(\)\,]/g, '').toLowerCase(),
                 nacionalidad: d.nacionalidad,
-                edad_media: +d.edad_media,
+                edad_media: +d.edad_media_primer_hijo,
                 ind_fecundidad: +d.ind_fecundidad
             }           
         });
 
-        innerData = [...data];
+        innerData = data.slice();
 
         //Filtramos los datos de España por defecto y la opción de 'ambas nacionalidades'
         let nacData = innerData.filter(function(item){if(item.ccaa_searchable == 'nacional' && item.nacionalidad == 'ambas'){ return item;}});
-        currentData = [...nacData.reverse()];
+        currentData = nacData.slice().reverse();
 
         //Desarrollo del gráfico > Debemos hacer muchas variables genéricas para luego actualizar el gráfico
-        let margin = {top: 5, right: 22.5, bottom: 25, left: 25};
+        let margin = {top: 5, right: 22.5, bottom: 25, left: 24.5};
         let width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
             height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
@@ -48,7 +60,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje X
         x_c = d3.scaleLinear()
-            .domain([26,34])
+            .domain([23,33])
             .range([0, width])
             .nice();
 
@@ -57,7 +69,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             g.call(function(g){
                 g.selectAll('.tick line')
                     .attr('y1', '0%')
-                    .attr('y2', `-${height}`)
+                    .attr('y2', '-' + height + '')
             })
             g.call(function(g){g.select('.domain').remove()});
         }
@@ -69,7 +81,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         //Eje Y
         y_c = d3.scaleLinear()
-            .domain([0.75,3.75])
+            .domain([0.75,3.5])
             .range([height,0])
             .nice();
     
@@ -82,8 +94,8 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                             return 'line-special';
                         }
                     })
-                    .attr("x1", `0`)
-                    .attr("x2", `${width}`)
+                    .attr("x1", '0')
+                    .attr("x2", '' + width + '')
             })
             svg.call(function(g){g.select('.domain').remove()})
         }        
@@ -100,9 +112,9 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
 
         path_1 = chart.append("path")
             .data([currentData])
-            .attr("class", `line-chart_1`)
+            .attr("class", 'line-chart_1')
             .attr("fill", "none")
-            .attr("stroke", `${enr_color_1}`)
+            .attr("stroke", '' + enr_color_1 + '')
             .attr("stroke-width", '1.5px')
             .attr("d", line);
 
@@ -119,7 +131,7 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .data(currentData)
             .enter()
             .append('circle')
-            .attr('class', `circle-chart_2_1`)
+            .attr('class', 'circle-chart_2_1')
             .attr("r", function(d,i){
                 if(i == 0 || i == currentData.length -1) {
                     return '5'
@@ -131,9 +143,9 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 } else if (i == currentData.length - 1) {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 } else {
                     return '#fff';
                 }
@@ -142,22 +154,20 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
                 if(i == 0 || i == currentData.length -1) {
                     return 'none'
                 } else {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 }
             })
             .style("stroke-width", function(d,i) {
                 if(i == 0 || i == currentData.length -1) {
                     return '0'
                 } else {
-                    return `0.5`;
+                    return '0.5';
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + ' (' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -172,6 +182,10 @@ function initChart() { //Carga de datos y muestra por defecto de España sin com
             .transition()
             .delay(function(d,i) { return i * (3000 / currentData.length - 1)})
             .style('opacity', '1');
+
+        setTimeout(() => {
+            setChartCanvas(); 
+        }, 4000);
     });
 }
 
@@ -201,21 +215,16 @@ function updateChart(ccaa, ccaa2, nac) {
         ccaaSecondData = [];
     }
 
-    //Modificar línea y círculos > Puede que haya dos líneas
     if(nac == 'extranjera' && (ccaa == 'melilla' || ccaa2 == 'melilla' || ccaa == 'ceuta' || ccaa2 == 'ceuta')) {
-
         //Modificar el eje Y
         y_c.domain([0.75,7]).nice();
         chart.select(".y_c-axis")
             .call(y_cAxis);
-
     } else {
-
         //Modificar el eje Y
         y_c.domain([0.75,3.5]).nice();
         chart.select(".y_c-axis")
             .call(y_cAxis);
-
     }
 
     animateChart();
@@ -225,9 +234,9 @@ function animateChart() {
     //Opción de tener dos líneas
     path_1 = chart.select(".line-chart_1")
         .data([ccaaFirstData])
-        .attr("class", `line-chart_1`)
+        .attr("class", 'line-chart_1')
         .attr("fill", "none")
-        .attr("stroke", `${enr_color_1}`)
+        .attr("stroke", '' + enr_color_1 + '')
         .attr("stroke-width", '1.5px')
         .attr("d", line);
 
@@ -248,7 +257,7 @@ function animateChart() {
         .data(ccaaFirstData)
         .enter()
         .append('circle')
-        .attr('class', `circle-chart_2_1`)  
+        .attr('class', 'circle-chart_2_1')  
         .attr("r", function(d,i){
             if(i == 0 || i == ccaaFirstData.length -1) {
                 return '5'
@@ -260,9 +269,9 @@ function animateChart() {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) {
             if(i == 0) {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             } else if (i == ccaaFirstData.length - 1) {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             } else {
                 return '#fff';
             }
@@ -271,22 +280,20 @@ function animateChart() {
             if(i == 0 || i == ccaaFirstData.length -1) {
                 return 'none'
             } else {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             }
         })
         .style("stroke-width", function(d,i) {
-            if(i == 0 || i == ccaaFirstData.length -1) {
+            if(i == 0 || i == ccaaFirstData.length - 1) {
                 return '0'
             } else {
-                return `0.5`;
+                return '0.5';
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + ' (' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
@@ -307,9 +314,9 @@ function animateChart() {
     } else {
         path_2 = chart.select(".line-chart_2")
             .data([ccaaSecondData])
-            .attr("class", `line-chart_2`)
+            .attr("class", 'line-chart_2')
             .attr("fill", "none")
-            .attr("stroke", `${enr_color_2}`)
+            .attr("stroke", '' + enr_color_2 + '')
             .attr("stroke-width", '1.5px')
             .attr("d", line);
 
@@ -330,7 +337,7 @@ function animateChart() {
             .data(ccaaSecondData)
             .enter()
             .append('circle')
-            .attr('class', `circle-chart_2_2`)        
+            .attr('class', 'circle-chart_2_2')        
             .attr("r", function(d,i){
                 if(i == 0 || i == ccaaSecondData.length -1) {
                     return '5'
@@ -342,9 +349,9 @@ function animateChart() {
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 } else if (i == ccaaSecondData.length - 1) {
-                    return `${enr_color_1}`;
+                    return '' + enr_color_1 + '';
                 } else {
                     return '#fff';
                 }
@@ -353,22 +360,20 @@ function animateChart() {
                 if(i == 0 || i == ccaaSecondData.length - 1) {
                     return 'none'
                 } else {
-                    return `${enr_color_2}`;
+                    return '' + enr_color_2 + '';
                 }
             })
             .style("stroke-width", function(d,i) {
                 if(i == 0 || i == ccaaSecondData.length - 1) {
                     return '0'
                 } else {
-                    return `0.5`;
+                    return '0.5';
                 }
             })
             .style('opacity', '0')
             .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
                 //Texto
-                let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-                <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-                <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+                let html = '<p class="chart__tooltip--title">' + d.ccaa + ' (' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
                 tooltip.html(html);
 
@@ -382,8 +387,11 @@ function animateChart() {
             })
             .transition()
             .delay(function(d,i) { return i * (3000 / ccaaSecondData.length )})
-            .style('opacity', '1');
-    }   
+            .style('opacity', '1');        
+    }
+    setTimeout(() => {
+        setChartCanvas(); 
+    }, 4000);
 }
 
 document.getElementById('replay').addEventListener('click', function() {
@@ -393,9 +401,9 @@ document.getElementById('replay').addEventListener('click', function() {
 function initSecondPath(data) {
     path_2 = chart.append("path")
         .data([data])
-        .attr("class", `line-chart_2`)
+        .attr("class", 'line-chart_2')
         .attr("fill", "none")
-        .attr("stroke", `${enr_color_2}`)
+        .attr("stroke", '' + enr_color_2 + '')
         .attr("stroke-width", '1.5px')
         .attr("d", line);
 
@@ -412,9 +420,9 @@ function initSecondPath(data) {
         .data(data)
         .enter()
         .append('circle')
-        .attr('class', `circle-chart_2_2`)
+        .attr('class', 'circle-chart_2_2')
         .attr("r", function(d,i){
-            if(i == 0 || i == data.length -1) {
+            if(i == 0 || i == data.length - 1) {
                 return '5'
             } else {
                 return '2.5';
@@ -424,9 +432,9 @@ function initSecondPath(data) {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) { 
             if(i == 0) {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             } else if (i == data.length - 1) {
-                return `${enr_color_1}`;
+                return '' + enr_color_1 + '';
             } else {
                 return '#fff';
             }
@@ -435,22 +443,20 @@ function initSecondPath(data) {
             if(i == 0 || i == data.length -1) {
                 return 'none'
             } else {
-                return `${enr_color_2}`;
+                return '' + enr_color_2 + '';
             }
         })
         .style("stroke-width", function(d,i) {
             if(i == 0 || i == data.length -1) {
                 return '0'
             } else {
-                return `0.5`;
+                return '0.5';
             }
         })
         .style('opacity', '0')
         .on('mouseenter mousedown mousemove mouseover', function(d, i, e) {                
             //Texto
-            let html = `<p class="chart__tooltip--title">${d.ccaa} (${d.anio})</p>
-            <p class="chart__tooltip--text">Edad media a la maternidad del primer hijo: ${numberWithCommas(d.edad_media.toFixed(1))} años</p>
-            <p class="chart__tooltip--text">Indicador de fecundidad: ${numberWithCommas(d.ind_fecundidad.toFixed(1))}</p>`;
+            let html = '<p class="chart__tooltip--title">' + d.ccaa + ' (' + d.anio + ')</p>' + '<p class="chart__tooltip--text">Edad media a la maternidad en el primer hijo:' + numberWithCommas(d.edad_media.toFixed(1)) + ' años</p>' + '<p class="chart__tooltip--text">Indicador coyuntural de fecundidad:' + numberWithCommas(d.ind_fecundidad.toFixed(1)) + '</p>';
 
             tooltip.html(html);
 
@@ -467,11 +473,203 @@ function initSecondPath(data) {
         .style('opacity', '1');
 }
 
-//Helpers
-function numberWithCommas(x) {
-    return x.toString().replace(/\./g, ',');
+///// REDES SOCIALES /////
+setRRSSLinks();
+
+///// ALTURA DEL BLOQUE DEL GRÁFICO //////
+function getIframeParams() {
+    const params = new URLSearchParams(window.location.search);
+    const iframe = params.get('iframe');
+
+    if(iframe == 'fijo') {
+        setChartHeight(fijo);
+    } else {
+        setChartHeight();
+    }
+
+    console.log("Entra", iframe);
 }
 
-function numberWithCommas2(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+///Si viene desde iframe con altura fija, ejecutamos esta función. Si no, los altos son dinámicos a través de PYMJS
+function setChartHeight(iframe_fijo) {
+    if(iframe_fijo) {
+        //El contenedor y el main reciben una altura fija. En este caso, 688 y 656
+        //La altura del gráfico se ajusta más a lo disponible en el main, quitando títulos, lógica, ejes y pie de gráfico
+        document.getElementsByClassName('container')[0].style.height = '688px';
+        document.getElementsByClassName('main')[0].style.height = '656px';
+
+        let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight;
+        let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
+        let footerBlock = document.getElementsByClassName('chart__footer')[0].clientHeight;
+        let footerTop = 8, containerPadding = 8, marginTitle = 8, marginLogics = 16;
+
+        //Comprobar previamente la altura que le demos al MAIN. El estado base es 588 pero podemos hacerlo más o menos alto en función de nuestros intereses
+
+        let height = 612; //Altura total del main | Cambiar cuando sea necesario > Quitar aquí los ejes: 35 + 27 > 62
+        document.getElementsByClassName('chart__viz')[0].style.height = height - titleBlock - logicBlock - footerBlock - footerTop - containerPadding - marginTitle - marginLogics + 'px';
+    } else {
+        document.getElementsByClassName('main')[0].style.height = document.getElementsByClassName('main')[0].clientHeight + 'px';
+    }    
 }
+
+getIframeParams();
+
+///// DESCARGA COMO PNG O SVG > DOS PASOS/////
+let innerCanvas;
+let pngDownload = document.getElementById('pngImage');
+
+function setChartCanvas() {
+    html2canvas(document.querySelector("#chartBlock"), {width: 768, height: 656, imageTimeout: 12000, useCORS: true}).then(canvas => { innerCanvas = canvas; });
+}
+
+function setChartCanvasImage() {    
+    var image = innerCanvas.toDataURL();
+    // Create a link
+    var aDownloadLink = document.createElement('a');
+    // Add the name of the file to the link
+    aDownloadLink.download = 'viz-maternidad-fecundidad.png';
+    // Attach the data to the link
+    aDownloadLink.href = image;
+    // Get the code to click the download link
+    aDownloadLink.click();
+}
+
+pngDownload.addEventListener('click', function(){
+    setChartCanvasImage();
+});
+
+///// JUEGO DE PESTAÑAS /////
+//Cambios de pestañas
+let tabs = document.getElementsByClassName('tab');
+let contenidos = document.getElementsByClassName('content');
+
+for(let i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function(e) {
+        displayContainer(e.target);
+    });
+}
+
+function displayContainer(elem) {
+    let content = elem.getAttribute('data-target');
+
+    //Poner activo el botón
+    for(let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    elem.classList.add('active');
+
+    //Activar el contenido
+    for(let i = 0; i < contenidos.length; i++) {
+        contenidos[i].classList.remove('active');
+    }
+
+    document.getElementsByClassName(content)[0].classList.add('active');
+}
+
+///// USO DE SELECTORES //////
+let x, i, j, l, ll, selElmnt, a, b, c;
+let currentSelected = 'nacional', currentSelected_2 = '', currentSelectedNac = 'ambas';
+/* Look for any elements with the class "custom-select": */
+x = document.getElementsByClassName("custom-select");
+l = x.length;
+for (i = 0; i < l; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  ll = selElmnt.length;
+  /* For each element, create a new DIV that will act as the selected item: */
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /* For each element, create a new DIV that will contain the option list: */
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < ll; j++) {
+    /* For each option in the original select element,
+    create a new DIV that will act as an option item: */
+    c = document.createElement("DIV");
+    let valores = selElmnt.options[j].value.split("_");
+    c.setAttribute('data-value', valores[0]);
+    c.setAttribute('data-type', valores[1]);
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /* When an item is clicked, update the original select box,
+        and the selected item: */
+        let y, i, k, s, h, sl, yl;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        sl = s.length;
+        h = this.parentNode.previousSibling;
+        let elemType = e.target.getAttribute('data-type');
+        if(elemType == 'ccaa') {
+          //Vamos a dejar en display: none la segunda columna y a quitar la que había previamente (y viceversa)
+          document.querySelectorAll('[data-value=' + currentSelected + ']')[1].style.display = 'block';
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[1].style.display = 'none';
+
+          currentSelected = e.target.getAttribute('data-value');          
+        } else if (elemType == 'ccaa-2') {
+          //Vamos a dejar en display: none la primera columna y a quitar la que había previamente (y viceversa)
+          if(currentSelected_2 != ''){
+            document.querySelectorAll('[data-value=' + currentSelected_2 + ']')[0].style.display = 'block';
+          }          
+          document.querySelectorAll('[data-value=' + e.target.getAttribute('data-value') + ']')[0].style.display = 'none';
+
+          currentSelected_2 = e.target.getAttribute('data-value');
+        } else {
+          currentSelectedNac = e.target.getAttribute('data-value');
+        }
+        updateChart(currentSelected, currentSelected_2, currentSelectedNac);
+
+        for (i = 0; i < sl; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            yl = y.length;
+            for (k = 0; k < yl; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+    /* When the select box is clicked, close any other select boxes,
+    and open/close the current select box: */
+    e.stopPropagation();
+    closeAllSelect(this);
+    this.nextSibling.classList.toggle("select-hide");
+    this.classList.toggle("select-arrow-active");
+  });
+}
+
+document.querySelectorAll('[data-value="nacional"]')[1].style.display = 'none';
+
+function closeAllSelect(elmnt) {
+  /* A function that will close all select boxes in the document,
+  except the current select box: */
+  let x, y, i, xl, yl, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  xl = x.length;
+  yl = y.length;
+  for (i = 0; i < yl; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < xl; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+
+/* If the user clicks anywhere outside the select box,
+then close all select boxes: */
+document.addEventListener("click", closeAllSelect);
