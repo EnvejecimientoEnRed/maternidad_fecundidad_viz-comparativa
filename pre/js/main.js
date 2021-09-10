@@ -486,8 +486,6 @@ function getIframeParams() {
     } else {
         setChartHeight();
     }
-
-    console.log("Entra", iframe);
 }
 
 ///Si viene desde iframe con altura fija, ejecutamos esta función. Si no, los altos son dinámicos a través de PYMJS
@@ -545,6 +543,7 @@ let contenidos = document.getElementsByClassName('content');
 
 for(let i = 0; i < tabs.length; i++) {
     tabs[i].addEventListener('click', function(e) {
+        document.getElementsByClassName('main')[0].scrollIntoView();
         displayContainer(e.target);
     });
 }
