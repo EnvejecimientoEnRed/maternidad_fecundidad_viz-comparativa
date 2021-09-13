@@ -64,7 +64,7 @@ body, button {
 .b-chart {
     .chart {
         &__logics {
-            margin-top: 12px;            
+            margin-top: 8px;            
         }
 
         &__options {
@@ -105,7 +105,7 @@ body, button {
                 .select-selected:after {
                     position: absolute;
                     content: "";
-                    top: 12px;
+                    top: 10px;
                     right: 3px;
                     width: 0;
                     height: 0;
@@ -238,10 +238,10 @@ body, button {
 
                 //En función de la clase CSS que le acompañe, tendrá un color u otro
                 &.first::before {
-                    background-color: #e46b4f;
+                    background-color: #9E9E9E;
                 }
                 &.second::before {
-                    background-color: #296565;
+                    background-color: #5E5E5E;
                 }
             }
         }
@@ -273,7 +273,7 @@ body, button {
 
         &--special-axis {
             &.axis-y {
-                margin: 16px 0px 4px 0px;
+                margin: 12px 0px 4px 0px;
                 font-size: 0.85em;
             }
 
@@ -305,10 +305,9 @@ body, button {
             }
 
             .chart__note {
-                font-style: 0.65em;
                 font-style: italic;
 
-                margin-top: 8px;
+                margin-top: 4px;
             }
         }
     }

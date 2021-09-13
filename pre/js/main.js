@@ -16,8 +16,8 @@ let tooltip = d3.select('#tooltip');
 let innerData = [], currentData = [], ccaaFirstData = [], ccaaSecondData = [],
     chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis;
 let line, path_1, length_1, path_2, length_2;
-let enr_color_1 = '#296565';
-let enr_color_2 = '#e46b4f';
+let enr_color_1 = '#296565', circle_color_1 = '#9E9E9E';
+let enr_color_2 = '#e46b4f', circle_color_2 = '#5E5E5E';
 
 initChart();
 
@@ -143,9 +143,9 @@ function initChart() {
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return '' + enr_color_2 + '';
+                    return '' + circle_color_1 + '';
                 } else if (i == currentData.length - 1) {
-                    return '' + enr_color_1 + '';
+                    return '' + circle_color_2 + '';
                 } else {
                     return '#fff';
                 }
@@ -269,9 +269,9 @@ function animateChart() {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) {
             if(i == 0) {
-                return '' + enr_color_2 + '';
+                return '' + circle_color_1 + '';
             } else if (i == ccaaFirstData.length - 1) {
-                return '' + enr_color_1 + '';
+                return '' + circle_color_2 + '';
             } else {
                 return '#fff';
             }
@@ -349,9 +349,9 @@ function animateChart() {
             .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
             .style("fill", function(d,i) { 
                 if(i == 0) {
-                    return '' + enr_color_2 + '';
+                    return '' + circle_color_1 + '';
                 } else if (i == ccaaSecondData.length - 1) {
-                    return '' + enr_color_1 + '';
+                    return '' + circle_color_2 + '';
                 } else {
                     return '#fff';
                 }
@@ -432,9 +432,9 @@ function initSecondPath(data) {
         .attr("cy", function(d) { return y_c(d.ind_fecundidad); })
         .style("fill", function(d,i) { 
             if(i == 0) {
-                return '' + enr_color_2 + '';
+                return '' + circle_color_1 + '';
             } else if (i == data.length - 1) {
-                return '' + enr_color_1 + '';
+                return '' + circle_color_2 + '';
             } else {
                 return '#fff';
             }
@@ -482,7 +482,7 @@ function getIframeParams() {
     const iframe = params.get('iframe');
 
     if(iframe == 'fijo') {
-        setChartHeight(fijo);
+        setChartHeight('fijo');
     } else {
         setChartHeight();
     }
@@ -493,17 +493,17 @@ function setChartHeight(iframe_fijo) {
     if(iframe_fijo) {
         //El contenedor y el main reciben una altura fija. En este caso, 688 y 656
         //La altura del gráfico se ajusta más a lo disponible en el main, quitando títulos, lógica, ejes y pie de gráfico
-        document.getElementsByClassName('container')[0].style.height = '688px';
-        document.getElementsByClassName('main')[0].style.height = '656px';
+        document.getElementsByClassName('container')[0].style.height = '680px';
+        document.getElementsByClassName('main')[0].style.height = '648px';
 
         let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight;
         let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
         let footerBlock = document.getElementsByClassName('chart__footer')[0].clientHeight;
-        let footerTop = 8, containerPadding = 8, marginTitle = 8, marginLogics = 16;
+        let footerTop = 8, containerPadding = 8, marginTitle = 8, marginLogics = 12;
 
         //Comprobar previamente la altura que le demos al MAIN. El estado base es 588 pero podemos hacerlo más o menos alto en función de nuestros intereses
 
-        let height = 612; //Altura total del main | Cambiar cuando sea necesario > Quitar aquí los ejes: 35 + 27 > 62
+        let height = 604; //Altura total del main | Cambiar cuando sea necesario > Quitar aquí los ejes: 35 + 27 > 62
         document.getElementsByClassName('chart__viz')[0].style.height = height - titleBlock - logicBlock - footerBlock - footerTop - containerPadding - marginTitle - marginLogics + 'px';
     } else {
         document.getElementsByClassName('main')[0].style.height = document.getElementsByClassName('main')[0].clientHeight + 'px';
