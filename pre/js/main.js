@@ -517,7 +517,7 @@ let innerCanvas;
 let pngDownload = document.getElementById('pngImage');
 
 function setChartCanvas() {
-    html2canvas(document.querySelector("#chartBlock"), {width: 768, height: 656, imageTimeout: 12000, useCORS: true}).then(canvas => { innerCanvas = canvas; });
+    html2canvas(document.querySelector("#chartBlock"), {width: document.querySelector('#chartBlock').clientWidth, height: document.querySelector('#chartBlock').clientHeight, imageTimeout: 12000, useCORS: true}).then(canvas => { innerCanvas = canvas; });
 }
 
 function setChartCanvasImage() {    
