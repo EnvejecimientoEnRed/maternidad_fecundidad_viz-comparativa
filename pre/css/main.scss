@@ -289,14 +289,16 @@ body, button {
             font-size: 0.85em;
 
             .chart__source {
-                margin-right: 16px;
-
                 display: flex;
                 justify-content: space-between;
                 flex-wrap: wrap;
 
                 &--data, &--copyright {
                     margin-top: 8px;
+                }
+
+                &--data {
+                    margin-right: 16px;
                 }
 
                 &--data span {
