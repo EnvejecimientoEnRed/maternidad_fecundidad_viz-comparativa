@@ -64,22 +64,23 @@ body, button {
 .b-chart {
     .chart {
         &__logics {
-            margin-top: 8px;            
+            margin-top: 4px;            
         }
 
         &__options {
             width: 100%;
-
+            
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             
             //Selectores
             &--filter {
-
                 display: flex;
                 justify-content: center;
                 flex-wrap: wrap;
+
+                margin-top: 4px;
                 
                 /* SELECTOR */
                 .b-custom-select {
@@ -320,8 +321,8 @@ body, button {
         top: 8px;
         right: 0px;
 
-        width: 80px;
-        height: 42px;
+        width: 76px;
+        height: 46px;
     }
 }
 
@@ -332,8 +333,8 @@ body, button {
 //Elementos genéricos en contenedores
 .b-title {
     width: 100%;
-    max-width: calc(100% - 100px);
-    min-height: 40px;
+    max-width: calc(100% - 90px);
+    min-height: 46px;
     margin-bottom: 16px;
 
     .b-chart & {
@@ -506,7 +507,7 @@ body, button {
         max-width: none;
     
         .title {
-            max-width: calc(100% - 100px);
+            max-width: calc(100% - 90px);
         }
         
         .subtitle {
