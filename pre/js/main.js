@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 import '../css/main.scss';
 
 ///// VISUALIZACIÓN DEL GRÁFICO //////
-let dataSource = 'https://raw.githubusercontent.com/EnvejecimientoEnRed/maternidad-fecundidad-viz/main/data/data_nac_fec.csv';
+let dataSource = 'https://raw.githubusercontent.com/EnvejecimientoEnRed/maternidad_fecundidad_viz-comparativa/main/data/data_nac_fec.csv';
 let tooltip = d3.select('#tooltip');
 
 //Variables para visualización
